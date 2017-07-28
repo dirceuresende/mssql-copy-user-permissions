@@ -1,4 +1,7 @@
-CREATE PROCEDURE dbo.stpCopia_Permissoes (
+IF (OBJECT_ID('dbo.stpCopia_Permissoes') IS NULL) EXEC('CREATE PROCEDURE dbo.stpCopia_Permissoes AS SELECT 1')
+GO
+
+ALTER PROCEDURE dbo.stpCopia_Permissoes (
     @Usuario_Origem VARCHAR(MAX),
     @Usuario_Destino VARCHAR(MAX),
     @Database VARCHAR(MAX) = '',
@@ -14,7 +17,7 @@ AS BEGIN
 
 
     ---------------------------------------------------------------------------------------
-    -- CRIA«√O DE TABELAS
+    -- CRIA√á√ÉO DE TABELAS
     ---------------------------------------------------------------------------------------
 
     IF (OBJECT_ID('tempdb..#Permissoes_Database') IS NOT NULL) DROP TABLE #Permissoes_Database
@@ -130,11 +133,11 @@ AS BEGIN
         DECLARE @Query_Alterada VARCHAR(MAX)
 
         ---------------------------------------------------------------------------------------
-        -- PERMISS’ES DE TODOS OS DATABASES
+        -- PERMISS√ïES DE TODOS OS DATABASES
         ---------------------------------------------------------------------------------------
 
         SET @Query_Alterada = '
-    USE [];
+    USE [?];
     ' + @Query_Permissao_Database
     
     
@@ -143,11 +146,11 @@ AS BEGIN
 
 
         ---------------------------------------------------------------------------------------
-        -- PERMISS’ES EM ROLES DE TODOS OS DATABASES
+        -- PERMISS√ïES EM ROLES DE TODOS OS DATABASES
         ---------------------------------------------------------------------------------------
 
         SET @Query_Alterada = '
-    USE [];
+    USE [?];
     ' + @Query_Permissoes_Roles
 
 
@@ -156,7 +159,7 @@ AS BEGIN
 
 
         ---------------------------------------------------------------------------------------
-        -- PERMISS’ES NA INST¬NCIA
+        -- PERMISS√ïES NA INST√ÇNCIA
         ---------------------------------------------------------------------------------------
 
         INSERT INTO #Permissoes_Servidor
@@ -178,7 +181,7 @@ AS BEGIN
 
     
         ---------------------------------------------------------------------------------------
-        -- PERMISS’ES EM SERVER ROLES INST¬NCIA
+        -- PERMISS√ïES EM SERVER ROLES INST√ÇNCIA
         ---------------------------------------------------------------------------------------
 
         INSERT INTO #Permissoes_Roles_Servidor
@@ -202,7 +205,7 @@ AS BEGIN
     
 
         ---------------------------------------------------------------------------------------
-        -- PERMISS’ES DE UM DATABASE
+        -- PERMISS√ïES DE UM DATABASE
         ---------------------------------------------------------------------------------------
 
         SET @Query_Permissao_Database = '
@@ -213,7 +216,7 @@ AS BEGIN
 
 
         ---------------------------------------------------------------------------------------
-        -- PERMISS’ES EM ROLES DE UM DATABASE
+        -- PERMISS√ïES EM ROLES DE UM DATABASE
         ---------------------------------------------------------------------------------------
 
         SET @Query_Permissoes_Roles = '
@@ -227,7 +230,7 @@ AS BEGIN
 
     
     ---------------------------------------------------------------------------------------
-    -- CRIA OS USU¡RIOS (CASO N√O EXISTAM)
+    -- CRIA OS USU√ÅRIOS (CASO N√ÉO EXISTAM)
     ---------------------------------------------------------------------------------------
 
     DECLARE @Comando VARCHAR(MAX) = ''
@@ -237,7 +240,7 @@ AS BEGIN
     
 
         DECLARE @Query_Cria_Usuarios VARCHAR(MAX) = '
-    USE [];
+    USE [?];
 
     SELECT 
         DB_NAME() AS [database],
@@ -274,7 +277,7 @@ AS BEGIN
         IF (@Fl_Executar = 1)
             EXEC(@Comando)
         ELSE BEGIN
-            PRINT '-- CriaÁ„o de usu·rios'
+            PRINT '-- Cria√ß√£o de usu√°rios'
             PRINT @Comando
             PRINT ''
         END
@@ -283,7 +286,7 @@ AS BEGIN
     END
 
     ---------------------------------------------------------------------------------------
-    -- EXECUTA AS PERMISS’ES
+    -- EXECUTA AS PERMISS√ïES
     ---------------------------------------------------------------------------------------
 
 
@@ -314,7 +317,7 @@ AS BEGIN
     IF (@Fl_Executar = 1)
         EXEC(@Comando)
     ELSE BEGIN
-        PRINT '-- Permissıes de Database'
+        PRINT '-- Permiss√µes de Database'
         PRINT @Comando
         PRINT ''
     END
@@ -348,7 +351,7 @@ AS BEGIN
     IF (@Fl_Executar = 1)
         EXEC(@Comando)
     ELSE BEGIN
-        PRINT '-- Permissıes em Roles de Databases'
+        PRINT '-- Permiss√µes em Roles de Databases'
         PRINT @Comando
         PRINT ''
     END
@@ -387,7 +390,7 @@ AS BEGIN
         IF (@Fl_Executar = 1)
             EXEC(@Comando)
         ELSE BEGIN
-            PRINT '-- Permissıes em roles da inst‚ncia'
+            PRINT '-- Permiss√µes em roles da inst√¢ncia'
             PRINT @Comando
             PRINT ''
         END
@@ -420,7 +423,7 @@ AS BEGIN
         IF (@Fl_Executar = 1)
             EXEC(@Comando)
         ELSE BEGIN
-            PRINT '-- Permissıes na inst‚ncia'
+            PRINT '-- Permiss√µes na inst√¢ncia'
             PRINT @Comando
             PRINT ''
         END
